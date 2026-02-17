@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>日本産しだ主要属検索表</title>
+    <!-- PWA -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#2d5016">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="しだ検索">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', sans-serif;
+            background: #f5f5f5;
+            padding: 10px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .header {
+            background: #2d5016;
+            color: white;
+            padding: 20px;
+            border-radius: 8px 8px 0 0;
+        }
+        
+        .header h1 {
+            font-size: 1.5em;
+            margin-bottom: 5px;
+        }
+        
+        .header p {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 20px;
+        }
+        
+        .breadcrumb {
+            background: #e8f5e9;
+            padding: 12px 15px;
+            margin-bottom: 20px;
+            border-radius: 6px;
+            font-size: 0.85em;
+            color: #2d5016;
+            border-left: 4px solid #4caf50;
+        }
+        
+        .genus-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        /* ---- カードベース ---- */
+        .genus-card {
+            background: white;
+            border: 2px solid #4caf50;
+            border-radius: 8px;
+            padding: 12px 15px;
+            cursor: pointer;
+            transition: background 0.2s, box-shadow 0.2s;
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .genus-card:hover {
+            background: #f1f8e9;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        /* 展開済みカード */
+        .genus-card.expanded {
+            background: #f1f8e9;
+            border-color: #388e3c;
+        }
+
+        /* 未実装カード */
+        .genus-card-disabled {
+            background: #fafafa;
+            border: 2px dashed #bdbdbd;
+            cursor: default;
+            opacity: 0.7;
+        }
+        .genus-card-disabled:hover {
+            background: #fafafa;
+            box-shadow: none;
+        }
+
+        /* ---- カードヘッダー（flexで名前・バッジ・▼を整列） ---- */
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            min-height: 2em;
+        }
+
+        .card-header-left {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .card-header-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .status-badge {
+            background: #ff9800;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.7em;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .status-badge-ready {
+            background: #4caf50;
+        }
+
+        /* ▼ トグルインジケーター */
+        .expand-indicator {
+            display: inline-block;
+            color: #999;
+            font-size: 0.75em;
+            transition: transform 0.25s ease;
+            line-height: 1;
+        }
+
+        .genus-card.expanded .expand-indicator {
+            transform: rotate(180deg);
+            color: #388e3c;
+        }
+
+        /* 未実装カードには▼を薄く */
+        .genus-card-disabled .expand-indicator {
+            opacity: 0.4;
+        }
+
+        /* ---- 代表種エリア（全デバイス共通: 初期非表示） ---- */
+        .genus-examples {
+            display: none;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #c8e6c9;
+            font-size: 0.82em;
+            color: #555;
+            line-height: 1.5;
+        }
+
+        .genus-examples.show {
+            display: block;
+        }
+
+        /* 検索開始CTAボタン */
+        .start-search-btn {
+            display: block;
+            width: 100%;
+            margin-top: 12px;
+            padding: 11px 12px;
+            background: #2d5016;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.95em;
+            font-weight: bold;
+            cursor: pointer;
+            text-align: center;
+            letter-spacing: 0.03em;
+            transition: background 0.15s;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .start-search-btn:hover,
+        .start-search-btn:active {
+            background: #4caf50;
+        }
+
+        /* 準備中メッセージ */
+        .not-ready-msg {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 8px 12px;
+            background: #fff3e0;
+            color: #e65100;
+            border-radius: 6px;
+            font-size: 0.85em;
+            width: 100%;
+            box-sizing: border-box;
+            text-align: center;
+        }
+        
+        .genus-name {
+            font-size: 1.05em;
+            font-weight: bold;
+            color: #2d5016;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .genus-latin {
+            font-style: italic;
+            color: #888;
+            font-size: 0.82em;
+            margin-top: 2px;
+        }
+        
+        .question {
+            background: #fff3e0;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 6px;
+            border-left: 4px solid #ff9800;
+            font-weight: bold;
+            font-size: 1.05em;
+        }
+        
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .option-btn {
+            background: white;
+            border: 2px solid #4caf50;
+            padding: 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            text-align: left;
+            transition: all 0.2s;
+            color: #333;
+            line-height: 1.5;
+        }
+        
+        .option-btn:active {
+            background: #4caf50;
+            color: white;
+            transform: scale(0.98);
+        }
+        
+        .option-btn:active .candidates {
+            color: #e8f5e9;
+        }
+        
+        .candidates {
+            font-size: 0.75em;
+            color: #757575;
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px dashed #e0e0e0;
+            line-height: 1.4;
+        }
+        
+        .candidates-label {
+            font-weight: bold;
+            color: #616161;
+        }
+        
+        .result {
+            background: #e3f2fd;
+            border: 3px solid #2196f3;
+            padding: 25px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        
+        .result h2 {
+            color: #1976d2;
+            font-size: 1.8em;
+            margin-bottom: 10px;
+        }
+        
+        .result-info {
+            background: white;
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 6px;
+            font-size: 0.95em;
+            color: #666;
+        }
+        
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        @media screen and (max-width: 768px) {
+            .controls {
+                flex-direction: column;
+            }
+        }
+        
+        .btn {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 6px;
+            font-size: 1em;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.2s;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+        
+        .btn-back {
+            background: #757575;
+            color: white;
+        }
+        
+        .btn-back:active {
+            background: #616161;
+        }
+        
+        .btn-reset {
+            background: #f44336;
+            color: white;
+        }
+        
+        .btn-reset:active {
+            background: #d32f2f;
+        }
+        
+        .key-term {
+            color: #d32f2f;
+            font-weight: bold;
+        }
+        
+        .intro-text {
+            background: #e8f5e9;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            border-left: 4px solid #4caf50;
+        }
+        
+        .intro-text h3 {
+            color: #2d5016;
+            margin-bottom: 8px;
+        }
+        
+        .intro-text p {
+            color: #555;
+            font-size: 0.95em;
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌿 日本産しだ主要属検索表</h1>
+            <p>光田重幸『しだの図鑑』より（北海道〜九州本土・26属収録）</p>
+        </div>
+        
+        <div class="content">
+            <div id="breadcrumb" class="breadcrumb" style="display:none;"></div>
+            <div id="main-content">
+                <!-- 初期画面: 属選択 -->
+                <div id="genus-selection">
+                    <div class="intro-text">
+                        <h3>📚 検索の流れ</h3>
+                        <p>まず属を選択してください。各属の代表的な種を参考に、観察した植物に近いものを選びます。</p>
+                        <p style="margin-top: 10px;"><strong>実装状況:</strong> 全26属中7属（約135種）が検索可能です。<span style="color: #4caf50; font-weight: bold;">●実装済</span>のバッジがついている属を選択してください。</p>
+                        <p style="margin-top: 10px; font-size: 0.85em; color: #666;">
+                            💡 属カードをタップして代表種を確認し、「タップして検索を開始」ボタンで検索スタート
+                        </p>
+                    </div>
+                    <div id="genus-grid" class="genus-grid"></div>
+                </div>
+                
+                <!-- 検索画面 -->
+                <div id="search-area" style="display:none;">
+                    <div id="question-area"></div>
+                    <div id="options-area" class="options"></div>
+                    <div id="result-area"></div>
+                </div>
+            </div>
+            
+            <div class="controls">
+                <button id="back-btn" class="btn btn-back" style="display:none;">⬅ 戻る</button>
+                <button id="reset-btn" class="btn btn-reset" style="display:none;">🔄 最初から</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 属一覧は最初から読み込む -->
+    <script src="data/genera.js"></script>
+    <script>
+        // 各属ツリーの格納先（属JSファイルがここに書き込む）
+        const GENUS_TREES = {};
+
+        // ---- 状態変数 ----
+        let currentGenus = null;
+        let currentTree  = null;
+        let currentNode  = null;
+        let history      = [];
+        let nodeHistory  = [];
+
+        // ---- 初期化 ----
+        function init() {
+            document.getElementById('back-btn').addEventListener('click',  e => { e.preventDefault(); goBack(); });
+            document.getElementById('reset-btn').addEventListener('click', e => { e.preventDefault(); reset(); });
+            renderGenusSelection();
+        }
+
+        // ---- 属選択画面 ----
+        function renderGenusSelection() {
+            const grid = document.getElementById('genus-grid');
+            grid.innerHTML = '';
+
+            GENERA_DATA.forEach(genus => {
+                const card = document.createElement('div');
+                card.className = genus.hasKey ? 'genus-card' : 'genus-card genus-card-disabled';
+
+                const badgeHTML = genus.hasKey
+                    ? '<span class="status-badge status-badge-ready">実装済</span>'
+                    : '<span class="status-badge">準備中</span>';
+
+                const ctaHTML = genus.hasKey
+                    ? `<button class="start-search-btn">🔍 タップして検索を開始</button>`
+                    : `<div class="not-ready-msg">⏳ この属は現在準備中です</div>`;
+
+                card.innerHTML = `
+                    <div class="card-header">
+                        <div class="card-header-left">
+                            <div class="genus-name">${genus.name}</div>
+                            <div class="genus-latin">${genus.latin}</div>
+                        </div>
+                        <div class="card-header-right">
+                            ${badgeHTML}
+                            <span class="expand-indicator">▼</span>
+                        </div>
+                    </div>
+                    <div class="genus-examples">
+                        <div>代表種: ${genus.examples}</div>
+                        ${ctaHTML}
+                    </div>
+                `;
+
+                const startBtn = card.querySelector('.start-search-btn');
+                if (startBtn) {
+                    startBtn.addEventListener('click', e => {
+                        e.stopPropagation();
+                        selectGenus(genus);
+                    });
+                }
+
+                card.addEventListener('click', () => {
+                    const isExpanded = card.classList.contains('expanded');
+                    document.querySelectorAll('.genus-card.expanded').forEach(c => {
+                        if (c !== card) {
+                            c.classList.remove('expanded');
+                            c.querySelector('.genus-examples').classList.remove('show');
+                        }
+                    });
+                    if (isExpanded) {
+                        card.classList.remove('expanded');
+                        card.querySelector('.genus-examples').classList.remove('show');
+                    } else {
+                        card.classList.add('expanded');
+                        card.querySelector('.genus-examples').classList.add('show');
+                    }
+                });
+
+                grid.appendChild(card);
+            });
+
+            document.getElementById('genus-selection').style.display = 'block';
+            document.getElementById('search-area').style.display     = 'none';
+            document.getElementById('breadcrumb').style.display      = 'none';
+            document.getElementById('reset-btn').style.display       = 'none';
+        }
+
+        // ---- 属ツリーJSを動的に読み込んで検索開始 ----
+        function selectGenus(genus) {
+            currentGenus = genus;
+            history      = [];
+            nodeHistory  = [];
+
+            // 既に読み込み済みならそのまま開始
+            if (GENUS_TREES[genus.id]) {
+                startSearch();
+                return;
+            }
+
+            // 未読み込みの場合: scriptタグを動的挿入
+            const script  = document.createElement('script');
+            script.src    = `data/${genus.id}.js`;
+            script.onload = () => startSearch();
+            script.onerror = () => alert(`${genus.name}のデータ読み込みに失敗しました。`);
+            document.head.appendChild(script);
+        }
+
+        function startSearch() {
+            const tree = GENUS_TREES[currentGenus.id];
+            currentNode = tree.start;
+            currentTree = tree;
+
+            document.getElementById('genus-selection').style.display = 'none';
+            document.getElementById('search-area').style.display     = 'block';
+            document.getElementById('breadcrumb').style.display      = 'block';
+            document.getElementById('reset-btn').style.display       = 'inline-block';
+
+            updateBreadcrumb();
+            render();
+        }
+
+        // ---- パンくず ----
+        function updateBreadcrumb() {
+            const el = document.getElementById('breadcrumb');
+            if (currentGenus) {
+                let text = `<strong>現在:</strong> ${currentGenus.name}`;
+                if (history.length > 0) text += ` → ${history.join(' → ')}`;
+                el.innerHTML = text;
+            }
+        }
+
+        // ---- 質問・選択肢を描画 ----
+        function render() {
+            const questionEl = document.getElementById('question-area');
+            const optionsEl  = document.getElementById('options-area');
+            const resultEl   = document.getElementById('result-area');
+
+            updateBreadcrumb();
+            document.getElementById('back-btn').style.display = history.length > 0 ? 'block' : 'none';
+            optionsEl.style.display = 'flex';
+            resultEl.innerHTML      = '';
+
+            questionEl.innerHTML = `<div class="question">${currentNode.question}</div>`;
+            optionsEl.innerHTML  = '';
+
+            currentNode.options.forEach(option => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+
+                const candidates = collectSpecies(option);
+                let html = option.text;
+                if (candidates.length > 0) {
+                    html += `<div class="candidates"><span class="candidates-label">候補:</span> ${candidates.join('、')}</div>`;
+                }
+                btn.innerHTML = html;
+
+                btn.addEventListener('click', e => {
+                    e.preventDefault();
+                    selectOption(option, option.text.replace(/<[^>]*>/g, ''));
+                });
+
+                optionsEl.appendChild(btn);
+            });
+        }
+
+        // ---- 候補種収集 ----
+        function collectSpecies(option) {
+            const species = [];
+            if (option.result) {
+                species.push(option.result);
+            } else if (option.next && currentTree[option.next]) {
+                currentTree[option.next].options.forEach(opt => species.push(...collectSpecies(opt)));
+            }
+            return species;
+        }
+
+        // ---- 選択肢を選ぶ ----
+        function selectOption(option, displayText) {
+            if (option.result) {
+                showResult(option.result, displayText);
+            } else if (option.next && currentTree) {
+                nodeHistory.push(currentNode);
+                history.push(displayText.substring(0, 30) + (displayText.length > 30 ? '...' : ''));
+                currentNode = currentTree[option.next];
+                render();
+            }
+        }
+
+        // ---- 結果表示 ----
+        function showResult(species, lastChoice) {
+            document.getElementById('options-area').style.display = 'none';
+            document.getElementById('back-btn').style.display     = 'block';
+            document.getElementById('result-area').innerHTML = `
+                <div class="result">
+                    <h2>🎯 ${species}</h2>
+                    <div class="result-info">
+                        <strong>最後の選択:</strong> ${lastChoice}
+                    </div>
+                </div>
+            `;
+        }
+
+        // ---- 戻る ----
+        function goBack() {
+            if (nodeHistory.length === 0) { reset(); return; }
+            history.pop();
+            currentNode = nodeHistory.pop();
+            document.getElementById('options-area').style.display = 'flex';
+            render();
+        }
+
+        // ---- 属選択に戻る ----
+        function reset() {
+            currentGenus = null;
+            currentTree  = null;
+            currentNode  = null;
+            history      = [];
+            nodeHistory  = [];
+            renderGenusSelection();
+        }
+
+        init();
+
+        // ---- Service Worker 登録（PWAオフライン対応）----
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(reg => console.log('SW registered:', reg.scope))
+                    .catch(err => console.warn('SW registration failed:', err));
+            });
+        }
+    </script>
+</body>
+</html>
