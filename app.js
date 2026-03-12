@@ -166,12 +166,13 @@ function render() {
 }
 
 // ---- 候補種収集 ----
-function collectSpecies(option) {
+function collectSpecies(option, visited = new Set()) {
     const species = [];
     if (option.result) {
         species.push(option.result);
-    } else if (option.next && currentTree[option.next]) {
-        currentTree[option.next].options.forEach(opt => species.push(...collectSpecies(opt)));
+    } else if (option.next && currentTree[option.next] && !visited.has(option.next)) {
+        visited.add(option.next);
+        currentTree[option.next].options.forEach(opt => species.push(...collectSpecies(opt, visited)));
     }
     return species;
 }
