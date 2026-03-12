@@ -4,7 +4,7 @@
 // 属データを追加・更新したときは CACHE_VERSION を変更する
 // =====================================================
 
-const CACHE_VERSION = 'v2';
+const CACHE_VERSION = 'v3';
 const CACHE_NAME    = `fern-search-${CACHE_VERSION}`;
 
 // インストール時にキャッシュするファイル一覧
@@ -24,7 +24,26 @@ const PRECACHE_FILES = [
   './data/asplenium.js',
   './data/pteris.js',
   './data/arachniodes.js',
-  // ▼ 新しい属JSを追加したらここにも追加する
+  // --- 追加19属 ---
+  './data/lycopodium.js',
+  './data/selaginella.js',
+  './data/equisetum.js',
+  './data/ophioglossum.js',
+  './data/sceptridium.js',
+  './data/osmunda.js',
+  './data/hymenophyllum.js',
+  './data/crepidomanes.js',
+  './data/microlepia.js',
+  './data/lindsaea.js',
+  './data/adiantum.js',
+  './data/cyrtomium.js',
+  './data/diplazium.js',
+  './data/deparia.js',
+  './data/woodsia.js',
+  './data/polypodium.js',
+  './data/lepisorus.js',
+  './data/colysis.js',
+  './data/crypsinus.js',
 ];
 
 // ---- インストール: 全ファイルをキャッシュ ----

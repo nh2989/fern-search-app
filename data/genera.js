@@ -5,77 +5,77 @@ const GENERA_DATA = [
     "name": "ヒカゲノカズラ属",
     "latin": "Lycopodium",
     "examples": "ヒカゲノカズラ、マンネンスギ、スギラン、ヨウラクヒバ",
-    "hasKey": false
+    "hasKey": true
   },
   {
     "id": "selaginella",
     "name": "クラマゴケ属",
     "latin": "Selaginella",
     "examples": "クラマゴケ、コンテリクラマゴケ、イワヒバ、カタヒバ",
-    "hasKey": false
+    "hasKey": true
   },
   {
     "id": "equisetum",
     "name": "トクサ属",
     "latin": "Equisetum",
     "examples": "スギナ、トクサ、イヌドクサ、ミズドクサ",
-    "hasKey": false
+    "hasKey": true
   },
   {
     "id": "ophioglossum",
     "name": "ハナヤスリ属",
     "latin": "Ophioglossum",
     "examples": "ヒロハハナヤスリ、ハマハナヤスリ、コハナヤスリ",
-    "hasKey": false
+    "hasKey": true
   },
   {
     "id": "sceptridium",
     "name": "オオハナワラビ属",
     "latin": "Sceptridium",
     "examples": "オオハナワラビ、アカハナワラビ、フユノハナワラビ",
-    "hasKey": false
+    "hasKey": true
   },
   {
     "id": "osmunda",
     "name": "ゼンマイ属",
     "latin": "Osmunda",
     "examples": "ゼンマイ、ヤマドリゼンマイ、オニゼンマイ",
-    "hasKey": false
+    "hasKey": true
   },
   {
     "id": "hymenophyllum",
     "name": "コケシノブ属",
     "latin": "Hymenophyllum",
     "examples": "コケシノブ、ホソバコケシノブ、オオコケシノブ",
-    "hasKey": false
+    "hasKey": true
   },
   {
     "id": "crepidomanes",
     "name": "アオホラゴケ属",
     "latin": "Crepidomanes",
-    "examples": "アオホラゴケ、ハイホラゴケ、ヒカゲワラビ",
-    "hasKey": false
+    "examples": "アオホラゴケ、ハイホラゴケ、ウチワゴケ",
+    "hasKey": true
   },
   {
     "id": "microlepia",
     "name": "フモトシダ属",
     "latin": "Microlepia",
     "examples": "フモトシダ、イシカグマ、オドリコカグマ",
-    "hasKey": false
+    "hasKey": true
   },
   {
     "id": "lindsaea",
     "name": "ホングウシダ属",
     "latin": "Lindsaea",
     "examples": "ホングウシダ、エダウチホングウシダ",
-    "hasKey": false
+    "hasKey": true
   },
   {
     "id": "adiantum",
     "name": "ホウライシダ属",
     "latin": "Adiantum",
     "examples": "ホウライシダ、ハコネシダ、クジャクシダ",
-    "hasKey": false
+    "hasKey": true
   },
   {
     "id": "pteris",
@@ -96,7 +96,7 @@ const GENERA_DATA = [
     "name": "ヤブソテツ属",
     "latin": "Cyrtomium",
     "examples": "ヤブソテツ、オニヤブソテツ、ツクシヤブソテツ",
-    "hasKey": false
+    "hasKey": true
   },
   {
     "id": "arachniodes",
@@ -131,21 +131,21 @@ const GENERA_DATA = [
     "name": "ヘラシダ属",
     "latin": "Diplazium",
     "examples": "ヘラシダ、キヨタキシダ、ノコギリシダ、オニヒカゲワラビ",
-    "hasKey": false
+    "hasKey": true
   },
   {
     "id": "deparia",
     "name": "シケシダ属",
     "latin": "Deparia",
     "examples": "シケシダ、ホソバシケシダ、オオメシダ、ミヤマシケシダ",
-    "hasKey": false
+    "hasKey": true
   },
   {
     "id": "woodsia",
     "name": "イワデンダ属",
     "latin": "Woodsia",
     "examples": "イワデンダ、フクロシダ、ヒメデンダ",
-    "hasKey": false
+    "hasKey": true
   },
   {
     "id": "asplenium",
@@ -159,27 +159,27 @@ const GENERA_DATA = [
     "name": "エゾデンダ属",
     "latin": "Polypodium",
     "examples": "エゾデンダ、オオエゾデンダ、ミョウギシダ",
-    "hasKey": false
+    "hasKey": true
   },
   {
     "id": "lepisorus",
     "name": "ノキシノブ属",
     "latin": "Lepisorus",
     "examples": "ノキシノブ、ヒメノキシノブ、ホテイシダ、コウラボシ",
-    "hasKey": false
+    "hasKey": true
   },
   {
     "id": "colysis",
     "name": "イワヒトデ属",
     "latin": "Colysis",
     "examples": "イワヒトデ、オオイワヒトデ、ヒトツバイワヒトデ",
-    "hasKey": false
+    "hasKey": true
   },
   {
     "id": "crypsinus",
     "name": "ミツデウラボシ属",
     "latin": "Crypsinus",
     "examples": "ミツデウラボシ、ミヤマウラボシ、ヤクシマウラボシ",
-    "hasKey": false
+    "hasKey": true
   }
 ];
