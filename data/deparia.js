@@ -75,7 +75,7 @@ GENUS_TREES["deparia"] = {
   "node1_2": {
     "question": "根茎のはい方と葉の形",
     "options": [
-      { "text": "根茎はやや細く<span class=\"key-term\">長くはう</span>。葉は卵状長楕円形〜長楕円形，2回羽状中〜深裂，葉柄と葉軸には黒い鱗片が多い", "result": "オオヘメワラビモドキ" },
+      { "text": "根茎はやや細く<span class=\"key-term\">長くはう</span>。葉は卵状長楕円形〜長楕円形，2回羽状中〜深裂，葉柄と葉軸には黒い鱗片が多い", "result": "オオヒメワラビモドキ" },
       { "text": "根茎は太く<span class=\"key-term\">短くはう</span>。葉は三角形から三角状卵形，3回中〜深裂", "next": "node1_2_2" }
     ]
   },
