@@ -4,13 +4,15 @@
 // 属データを追加・更新したときは CACHE_VERSION を変更する
 // =====================================================
 
-const CACHE_VERSION = 'v1';
+const CACHE_VERSION = 'v2';
 const CACHE_NAME    = `fern-search-${CACHE_VERSION}`;
 
 // インストール時にキャッシュするファイル一覧
 const PRECACHE_FILES = [
   './',
   './index.html',
+  './style.css',
+  './app.js',
   './manifest.json',
   './icon-192.png',
   './icon-512.png',
