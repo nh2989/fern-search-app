@@ -41,15 +41,19 @@ GENUS_TREES["polystichum"] = {
     ]
   },
   "node2_1": {
-    "question": "葉の形態",
+    "question": "葉の形態と羽状の回数",
     "options": [
       {
         "text": "葉は<span class=\"key-term\">十字状に3岐</span>し、各部は単羽状",
         "result": "ジュウモンジシダ"
       },
       {
-        "text": "葉は十字状にならず、単羽状",
+        "text": "葉は十字状にならず、<span class=\"key-term\">単羽状</span>",
         "next": "node2_1_1"
+      },
+      {
+        "text": "葉は<span class=\"key-term\">2回羽状深裂から3回羽状複生</span>",
+        "next": "node2_2"
       }
     ]
   },
@@ -295,7 +299,7 @@ GENUS_TREES["polystichum"] = {
         "next": "node2_2_1_2_2_2_1_1"
       },
       {
-        "text": "下部の羽片はほとんど、またはまったく縮小しない。葉面には光沢がある",
+        "text": "下部の羽片はほとんど、またはまったく縮小しない。葉面には<span class=\"key-term\">光沢がある</span>",
         "next": "node2_2_1_2_2_2_1_2"
       }
     ]
@@ -353,14 +357,14 @@ GENUS_TREES["polystichum"] = {
     ]
   },
   "node2_2_1_2_2_2_1_2_2": {
-    "question": "葉の長さと斜上度、ソーラスの位置",
+    "question": "葉の長さと広がり方、ソーラスの位置",
     "options": [
       {
         "text": "葉は長さ<span class=\"key-term\">40cm以下</span>で、ロゼット状に地表にひらく。ソーラスは<span class=\"key-term\">ごく縁寄り</span>。葉軸の鱗片は乾くとねじれる",
         "result": "チャボイノデ"
       },
       {
-        "text": "葉はふつう長さ50cm以上、斜上してひらく。ソーラスはごく縁寄りということはない",
+        "text": "葉はふつう長さ<span class=\"key-term\">50cm以上</span>、斜上してひらく。ソーラスはごく縁寄りということはない",
         "next": "node2_2_1_2_2_2_1_2_2_1"
       }
     ]
