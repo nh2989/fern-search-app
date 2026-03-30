@@ -4,7 +4,7 @@
 // 属データを追加・更新したときは CACHE_VERSION を変更する
 // =====================================================
 
-const CACHE_VERSION = 'v3';
+const CACHE_VERSION = 'v4';
 const CACHE_NAME    = `fern-search-${CACHE_VERSION}`;
 
 // インストール時にキャッシュするファイル一覧
